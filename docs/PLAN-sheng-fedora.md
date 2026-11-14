@@ -127,17 +127,18 @@ UKI 是给 UEFI 固件执行的 PE/EFI 文件，固件从 ESP 的 FAT 按节区�
 2. 定接口。
 3. 改驱动仓库：可区分 commit 的 NVRA、`deploy/manifest.json`、runtime tier。
 4. 回填 `sources.lock.json`。
-5. 执行 A。
 
-A 是把 `phxinyang/qualcomm-iris-vaapi:main` 快进到 `FFT-infra/sheng-video-accel:main` 的 130 个提交，让 `phxinyang` 重新成为唯一权威。用户明确说「A，但是等之后」：现在不推，等用户在该轮明确授权。在 A 执行前，`sources.lock.json` 暂时钉 `FFT-infra/sheng-video-accel` 的 commit；A 执行完再切到 `phxinyang` 的 commit，并在 docs 记「何时切换、为什么」。
+原先排在第 5 步的 A 已完成：PR #9 于 2026-11-14T14:32:28Z 合入 `phxinyang/qualcomm-iris-vaapi:main`，merge commit 为 `db28991`，`fork/main` 落后其 41 个提交。`phxinyang/qualcomm-iris-vaapi` 现在是唯一权威，`sources.lock.json` 直接钉 `db28991` 或其 gate run id，不再临时钉 `FFT-infra/sheng-video-accel`。
+
+内核补丁 tag 的归属还没跟上这次合并：`iris-kernel-patches-v1`（`580d6b9`）目前只存在于 `FFT-infra/sheng-video-accel`，`phxinyang/qualcomm-iris-vaapi` 没有任何 tag。下游 spec 按 `packaging/kernel/README.md` 取补丁会拉到旧仓库坐标。把 tag 迁到主仓库（或在主仓库打新 tag，并同步更新 `packaging/kernel/README.md` 与 `test/iris-kernel-patch-check.sh` 的引用）是定接口的前置条件。
 
 ### 项目环境现状
 
 | 对象 | 当前状态 | 约束 |
 | :--- | :--- | :--- |
-| `FFT-infra/sheng-fedora` | 空仓库 | 本文是后续骨架的输入 |
+| `FFT-infra/sheng-fedora` | 已有本文档，其余待建 | 本文是后续骨架的输入 |
 | `piano-fedora` | 有用户未提交改动 | 不动、不覆盖 |
-| `qualcomm-iris-vaapi` | `feat/absorb-upstream-advantages`，工作树干净 | 未写文件、未 push、未执行 A |
+| `qualcomm-iris-vaapi` | `main` @ `db28991`，工作树干净 | A 已完成；尚无 `deploy/`、Release 与可下载 RPM |
 
 ## 最脆的前提与真机验收
 
